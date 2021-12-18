@@ -1,0 +1,75 @@
+
+select * from usuarios;
+
+select * from telefones;
+ 
+insert into telefones (tipo,numero_completo,usuario_id) 
+values ("particular","+5547",4);
+insert into telefones (tipo,numero_completo,usuario_id) 
+values ("comercial","47-9365789",3);
+
+
+select * from usuarios
+inner join telefones on telefones.usuario_id = usuarios.id;
+--inner join -> é um tipo de relacionamento restrito onde valores comparados devem existir em ambas tabelas.
+--left join -> permite relacionamento  menos restritivo onde basta existir dados na tabela prinipal.
+-- (dados que nao existem ficarão nulos)
+select 
+usu.nome as usuario,
+usu.email as "e-mail",
+usu.senha as password,
+tel.tipo as type,
+tel.numero_completo as number
+from usuarios as usu
+left join telefones as tel on tel.usuario_id = usu.id
+where
+tel.numero_completo like "%47%";
+--------------------------------------------------------------------------------------------------------------------
+select * from series;
+
+insert into series (nome,ano,genero,diretor) values ("Vikings",2019,"ação","Michael Hirst");
+insert into series (nome,ano,diretor) values ("La Casa de Papel",2018,"Professor");
+insert into series (nome,ano,genero) values ("The Witcher",2020,"fantasia");
+insert into series (nome,ano,genero) values ("One Piece",1997,"anime");
+insert into series (nome,ano,genero) values ("Bleach",1999,"anime");
+insert into series (nome,ano,genero) values ("Naruto",2002,"ação");
+insert into series (nome,ano,genero) values ("The Boys",2020,"ação");
+
+select count(*) from series
+where ano = 2019;
+
+select genero,count(*) from series
+group by genero;
+
+delete from series
+where id = 8
+
+select * from episodios;
+--id 2 = la casa de papel
+insert into episodios (serie_id,titulo,sequencia,descricao) values (2,"Piloto",0,"Assistam");
+insert into episodios (serie_id,titulo,sequencia,descricao) values (2,"Ep-5",5,"Morreu alguem");
+insert into episodios (serie_id,titulo,sequencia,descricao) values (2,"Ep-1",1,"Professor sabe tudo");
+insert into episodios (serie_id,titulo,sequencia,descricao) values (2,"Ep-10",10,"O plano deu errado");
+insert into episodios (serie_id,titulo,sequencia,descricao) values (6,"A prova chunin",24,"Pode tentar colar..");
+insert into episodios (serie_id,titulo,sequencia,descricao) values (6,"Retorno da Zabuza",12,"Zabusa o demônio..");
+insert into episodios (serie_id,titulo,sequencia,descricao) values (6,"Uma morte digna",47,"Perdendo com orgulho");
+insert into episodios (serie_id,titulo,sequencia,descricao) values (2,"Fim da estrada",3,"Quase pegam o professor");
+
+select * from series as se
+inner join episodios as ep on ep.serie_id = se.id
+where se.id = 2
+order by ep.sequencia asc;
+--ASC -> ordem ascendente // DESC -> ordem decrescente
+
+select * from series as se
+left join episodios as ep on ep.serie_id = se.id
+order by se.nome asc,ep.sequencia desc;
+
+--para fazer contagens/agrupadores, informar quais campos se repetem
+--e esses campos devem ser os unicos presentes no select.
+--os demais campos sao agrupamentos como COUNT e SUM.
+--os campos mencionados no select devem existir no GROUP BY
+-- Nao usar LEFT pois sempre que falta relacionamento é gerado no minimo uma linha vazia que nao pode contar.
+select se.nome, count(*) from series as se
+inner join episodios as ep on ep.serie_id = se.id
+group by se.nome

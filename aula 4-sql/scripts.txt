@@ -38,3 +38,6 @@ set
 idade = 18
 where
 nome like "%n"
+
+drop table pessoas //deletar tabela
+
